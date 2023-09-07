@@ -2,6 +2,7 @@ package dev.akhil.productservice.services;
 
 import dev.akhil.productservice.dtos.FakeStoreProductDTO;
 import dev.akhil.productservice.dtos.GenericProductDTO;
+import dev.akhil.productservice.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -23,10 +24,13 @@ public class FakeStoreProxyProductService implements ProductService{
 
     private String productRequestsBaseUrl = "https://fakestoreapi.com/products";
     @Override
-    public GenericProductDTO getProductById(Long id) {
+    public GenericProductDTO getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDTO> responseEntity = restTemplate.getForEntity(specificProductRequestUrl, FakeStoreProductDTO.class, id);
         FakeStoreProductDTO fakeStoreProductDTO = responseEntity.getBody();
+        if(fakeStoreProductDTO == null){
+            throw new NotFoundException("Product with Id "+ id + " does not exist. ");
+        }
         return getGenericProductDTO(fakeStoreProductDTO);
     }
 

@@ -1,6 +1,7 @@
 package dev.akhil.productservice.controllers;
 
 import dev.akhil.productservice.dtos.GenericProductDTO;
+import dev.akhil.productservice.exceptions.NotFoundException;
 import dev.akhil.productservice.models.Product;
 import dev.akhil.productservice.services.FakeStoreProxyProductService;
 import dev.akhil.productservice.services.ProductService;
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public GenericProductDTO getProductById(@PathVariable("id") Long id){
+    public GenericProductDTO getProductById(@PathVariable("id") Long id) throws NotFoundException {
         return productService.getProductById(id);
     }
 
