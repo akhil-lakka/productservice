@@ -2,10 +2,16 @@ package dev.akhil.productservice.controllers;
 
 import dev.akhil.productservice.dtos.GenericProductDTO;
 import dev.akhil.productservice.models.Product;
+import dev.akhil.productservice.services.FakeStoreProxyProductService;
 import dev.akhil.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -20,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public void getAllProducts(){
-
+    public List<GenericProductDTO> getAllProducts(){
+        return productService.getAllProdcuts();
     }
 
     @GetMapping("{id}")
@@ -30,17 +36,21 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteProductById(@PathVariable("id") Long id){
-
+    public ResponseEntity<GenericProductDTO> deleteProductById(@PathVariable("id") Long id){
+        ResponseEntity<GenericProductDTO> responseEntity = new ResponseEntity<>(
+                productService.deleteProduct(id), HttpStatus.OK
+        );
+        return responseEntity;
     }
 
     @PostMapping
-    public void createProduct(){
-
+    public GenericProductDTO createProduct(@RequestBody GenericProductDTO product){
+        return productService.createdProduct(product);
+//        System.out.println("product" + product);
     }
 
     @PutMapping("{id}")
-    public void updateProductById(@PathVariable("id") Long id){
-
+    public GenericProductDTO updateProductById(@PathVariable("id") Long id, @RequestBody GenericProductDTO product){
+        return productService.updateProduct(product, id);
     }
 }
