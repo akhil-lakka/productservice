@@ -1,12 +1,10 @@
 package dev.akhil.productservice.controllers;
 
+import dev.akhil.productservice.dtos.ExecptionDTO;
 import dev.akhil.productservice.dtos.GenericProductDTO;
-import dev.akhil.productservice.models.Product;
-import dev.akhil.productservice.services.FakeStoreProxyProductService;
+import dev.akhil.productservice.exceptions.NotFoundException;
 import dev.akhil.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public GenericProductDTO getProductById(@PathVariable("id") Long id){
+    public GenericProductDTO getProductById(@PathVariable("id") Long id) throws NotFoundException {
         return productService.getProductById(id);
     }
 
@@ -46,11 +44,11 @@ public class ProductController {
     @PostMapping
     public GenericProductDTO createProduct(@RequestBody GenericProductDTO product){
         return productService.createdProduct(product);
-//        System.out.println("product" + product);
     }
 
     @PutMapping("{id}")
     public GenericProductDTO updateProductById(@PathVariable("id") Long id, @RequestBody GenericProductDTO product){
         return productService.updateProduct(product, id);
     }
+
 }
